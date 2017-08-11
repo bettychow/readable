@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Route } from 'react-router-dom'
 import * as ReadableAPI from './utils/ReadableAPI'
 import CreateNewPost from './CreateNewPost'
+import PostDetails from './PostDetails'
+import Main from './Main'
 
 import './App.css';
 
@@ -10,6 +12,7 @@ class App extends Component {
   state = {
     categories: [],
     posts: [],
+    postById: {}
   }
 
   componentDidMount() {
@@ -31,7 +34,7 @@ sortByTime = (posts) => {
       return (a.timestamp > b.timestamp) ? -1 : ((b.timestamp > a.timestamp) ?  1 : 0)
     })
       this.setState({ posts: x })
-    }
+}
 
 sortByScore = (posts) => {
   let y = this.state.posts
@@ -40,46 +43,47 @@ sortByScore = (posts) => {
       });
         this.setState({ posts: y });
 }
+
+createPost = (post) => {
+  ReadableAPI.create(post).then(post => { 
+      this.setState(state => ({
+        posts: state.posts.concat([ post ])
+      }))
+       console.log('ppp', this.state.posts)
+    })
+}
+
+/* getPostbyId = (id) => {
+  ReadableAPI.getPost(id).then(post => {
+    this.setState({ postById: post })
+  })
+} */
+
   render() {
     const { categories, posts } = this.state
-
+console.log('posts', posts)
     const time = (timestamp) => {
-      let d = new Date(timestamp)
+      let time =  parseInt(timestamp)
+      let d = new Date(time)
       return `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}    ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
     }
   
     return (
       <div className="App">
-       <div >
-            <ul>
-                { categories.map(category => (
-                    <li key={category.name}>
-                        <a>{category.name}</a>
-                    </li>
-                ))}
-            </ul>
-        </div>
-        <div >
-            <ul>
-                { posts.map(post => (
-                    <li key={post.id}>
-                        <p>{post.title}</p>    
-                        <p>{post.body}</p>
-                        <p>{post.author}</p>
-                        <p>{post.category}</p>
-                        <p>{post.voteScore}</p> 
-                        <p>{time(post.timestamp)}</p>
-                    </li>
-                ))}
-            </ul>
-        </div>
-        <button onClick={(posts) => this.sortByTime(posts)}>Latest Posts First</button>
-        <button onClick={(posts) => this.sortByScore(posts)}>Posts With Highest Vote First</button>
-        <div>
-          <CreateNewPost
+        <Route exact path="/" render={() => (
+          <Main 
+            posts={this.state.posts}
             categories={this.state.categories}
+            onCreatePost={this.createPost}
+          
           />
-        </div>
+        )}/>
+        <Route exact path="/post" render={() => (
+          <PostDetails
+            post={this.state.postById}
+          />
+        )}/>
+        
       </div>
     );
   }

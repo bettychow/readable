@@ -15,3 +15,19 @@ export const getAllPosts = () =>
   fetch(`${api}/posts`, { headers })
     .then(res => res.json())
     .then(data => data)
+
+ export const create = (body) =>
+  fetch(`${api}/posts`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  }).then(res => res.json())
+
+  /* export const getPost = (id) =>
+  fetch(`${api}/posts/:id`, { headers })
+    .then(res => res.json())
+    .then(data => data)
+  */

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import serializeForm from 'form-serialize'
+const randomID = require("random-id")
+
 
 class CreateNewPost extends Component {
   
@@ -18,13 +20,15 @@ handleSubmit = (e) => {
         }
 
 handleChange = (e) => {
+    console.log('qq', e.target.value)
   this.setState({ selectedValue: e.target.value})
 }
+
 
   render () {
 const { postInput, selectedValue } = this.state
 const { categories } = this.props
-  console.log('kkk', categories)
+
   return (
     <div>
       <h2>Add A New Post</h2>
@@ -32,16 +36,17 @@ const { categories } = this.props
         <div>
           <input type="text" name="title" placeholder="Title"/>
           <textArea type="text" name="body" placeholder="Content"/>
-          <input type="hidden" id="date" name="timestamp"/>
-            <script type="text/javascript">
-            document.getElementById('date').value = Date.now();
-            </script>
+          <input type="hidden" id="date" name="timestamp" value={Date.now()}/>
           <input type="text" name="author" placeholder="Your Name"/>
-          <select value={selectedValue} onChange={this.handleChange}>
+          <input type="hidden" name="voteScore" value={ 0 }/>
+          <input type="hidden" name="deleted" value={ false }/>
+          <input type="hidden" id="randomId" name="id" value={randomID()}/>
+          <select value={selectedValue} name="category" onChange={this.handleChange}>
+              <option disabled >Pick a category</option>
               {
-                  categories.map(category => {
-                      <option value={ category.name}>{category.name}</option>
-                  })
+                categories.map(category => (
+                  <option value={ category.name}>{category.name}</option>
+                ))
               }
           </select>
           <button>Submit New Post</button>
