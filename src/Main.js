@@ -31,6 +31,7 @@ class Main extends Component {
                         <p>{post.author}</p>
                         <p>{post.category}</p>
                         <p>{post.voteScore}</p>
+                        <p>{new Date(post.timestamp)}</p>
                     </li>
                     
                 ))}
