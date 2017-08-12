@@ -1,14 +1,23 @@
 import React, { Component } from 'react'
 import serializeForm from 'form-serialize'
 import { connect, bindActionCreators } from 'react-redux'
+import { fetchByPostId } from '../Actions'
 const randomID = require("random-id")
 
 class PostDetails extends Component {
+
+  componentDidMount() {
+    
+    this.props.fetchByPostId(this.props.match.params.id)
+  }
+  
   
   render () {
 
-const { post } = this.state
 
+
+const { post } = this.props
+ 
 const time = (timestamp) => {
       let time =  parseInt(timestamp)
       let d = new Date(time)
@@ -37,7 +46,7 @@ const time = (timestamp) => {
 
 const mapStateToProps = (state) => {
   return {
-    post: state.post,
+    post: state.post.post,
   }
 }
 

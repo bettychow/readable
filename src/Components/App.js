@@ -83,10 +83,10 @@ console.log('posts', posts)
             categories={this.state.categories}
             onCreatePost={this.createPost}
             onGetPostByCat={this.getPostByCat}
-            //onGetPostById={this.getPostbyId}
+            onGetPostById={this.getPostbyId}
           />
         )}/>
-        <Route exact path="/post/:id" render={() => (
+        <Route exact path="/:post_id" render={() => (
           <PostDetails
             post={this.state.postById}
           />

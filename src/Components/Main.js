@@ -55,8 +55,9 @@ console.log('ppp', posts)
         <div >
             <ul>
                 { posts.map(post => (
+
                     <li key={post.id}>
-                        <a href="./post/:id" onClick={
+                        <a href="`./:${post.id}`" onClick={
                             () => {
                                 onGetPostById(post.id)
                             }
@@ -87,14 +88,13 @@ console.log('ppp', posts)
 } */
 
 const mapDispatchToProps = (dispatch) => {
+    console.log('kitty')
   return {
     onGetPostById: (data) => dispatch(fetchByPostId(data)),
-    
   }
 }
 
 
 export default connect(
-  
   mapDispatchToProps
 )(Main)
