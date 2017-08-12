@@ -26,8 +26,14 @@ export const getAllPosts = () =>
     body: JSON.stringify(body)
   }).then(res => res.json())
 
-  /* export const getPost = (id) =>
-  fetch(`${api}/posts/:id`, { headers })
+  export const getPost = (id) =>
+  fetch(`${api}/posts/${id}`, { headers })
     .then(res => res.json())
     .then(data => data)
-  */
+
+
+  export const getPostByCat = () =>
+  fetch(`${api}/category/posts`, { headers })
+    .then(res => res.json())
+    .then(data => data)
+

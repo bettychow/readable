@@ -4,6 +4,7 @@ import * as ReadableAPI from './utils/ReadableAPI'
 import CreateNewPost from './CreateNewPost'
 import PostDetails from './PostDetails'
 import Main from './Main'
+import Category from './Category'
 
 import './App.css';
 
@@ -12,7 +13,8 @@ class App extends Component {
   state = {
     categories: [],
     posts: [],
-    postById: {}
+    postById: {},
+    postByCat: [],
   }
 
   componentDidMount() {
@@ -53,11 +55,19 @@ createPost = (post) => {
     })
 }
 
-/* getPostbyId = (id) => {
+getPostbyId = (id) => {
   ReadableAPI.getPost(id).then(post => {
+    console.log('hello', post)
     this.setState({ postById: post })
   })
-} */
+ 
+} 
+
+getPostByCat = (cat) => {
+  ReadableAPI.getPostByCat(cat).then(posts => {
+    this.setState({ postByCat: posts})
+  })
+}
 
   render() {
     const { categories, posts } = this.state
@@ -67,7 +77,7 @@ console.log('posts', posts)
       let d = new Date(time)
       return `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}    ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
     }
-  
+ 
     return (
       <div className="App">
         <Route exact path="/" render={() => (
@@ -75,12 +85,18 @@ console.log('posts', posts)
             posts={this.state.posts}
             categories={this.state.categories}
             onCreatePost={this.createPost}
-          
+            onGetPostByCat={this.getPostByCat}
+            getPost={this.getPostbyId}
           />
         )}/>
         <Route exact path="/post" render={() => (
           <PostDetails
             post={this.state.postById}
+          />
+        )}/>
+        <Route exact path="/category" render={() => (
+          <Category
+            postByCat={this.state.postByCat}
           />
         )}/>
         

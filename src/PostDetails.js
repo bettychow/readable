@@ -5,7 +5,7 @@ const randomID = require("random-id")
 class PostDetails extends Component {
   
 
-updatePostInput = input => this.setState({ postInput: input })
+
 
 handleSubmit = (e) => {
         e.preventDefault()
@@ -20,11 +20,14 @@ handleSubmit = (e) => {
   render () {
 
 const { post } = this.props
+console.log('single', post)
 const time = (timestamp) => {
       let time =  parseInt(timestamp)
       let d = new Date(time)
       return `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}    ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
     }
+
+   
 
   return (
     <div>
