@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom'
-import * as ReadableAPI from './utils/ReadableAPI'
+import * as ReadableAPI from '../utils/ReadableAPI'
 import CreateNewPost from './CreateNewPost'
 import PostDetails from './PostDetails'
 import Main from './Main'
 import Category from './Category'
-
-import './App.css';
+import '../App.css';
 
 class App extends Component {
 
@@ -51,13 +50,11 @@ createPost = (post) => {
       this.setState(state => ({
         posts: state.posts.concat([ post ])
       }))
-       console.log('ppp', this.state.posts)
     })
 }
 
 getPostbyId = (id) => {
-  ReadableAPI.getPost(id).then(post => {
-    console.log('hello', post)
+  ReadableAPI.getPostById(id).then(post => {
     this.setState({ postById: post })
   })
  
@@ -86,10 +83,10 @@ console.log('posts', posts)
             categories={this.state.categories}
             onCreatePost={this.createPost}
             onGetPostByCat={this.getPostByCat}
-            getPost={this.getPostbyId}
+            //onGetPostById={this.getPostbyId}
           />
         )}/>
-        <Route exact path="/post" render={() => (
+        <Route exact path="/post/:id" render={() => (
           <PostDetails
             post={this.state.postById}
           />

@@ -1,17 +1,37 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 import CreateNewPost from './CreateNewPost'
+import { fetchByPostId } from '../Actions'
+import * as ReadableAPI from '../utils/ReadableAPI'
 
 class Main extends Component {
   
+ 
 
+ 
+sortByTime = (posts) => {
+  let x = this.state.posts
+    x.sort(function(a,b) {
+      return (a.timestamp > b.timestamp) ? -1 : ((b.timestamp > a.timestamp) ?  1 : 0)
+    })
+      this.setState({ posts: x })
+}
+
+sortByScore = (posts) => {
+  let y = this.state.posts
+    y.sort(function(a,b) {
+      return (a.voteScore > b.voteScore) ? -1 : ((b.voteScore > a.voteScore) ? 1 : 0);
+      });
+        this.setState({ posts: y });
+}
 
   render () {
-      const { categories, posts, onCreatePost, onGetPostByCat, getPost } = this.props
-    const time = (timestamp) => {
-      let time =  parseInt(timestamp)
-      let d = new Date(time)
-      console.log('ddd', d)
+      const { categories, posts, onCreatePost, onGetPostByCat, onGetPostById } = this.props
+      const time = (timestamp) => {
+        let time =  parseInt(timestamp)
+        let d = new Date(time)
+        console.log('ddd', d)
       return `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}    ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
     }
 console.log('ccc', categories)
@@ -36,9 +56,9 @@ console.log('ppp', posts)
             <ul>
                 { posts.map(post => (
                     <li key={post.id}>
-                        <a href="./post" onClick={
+                        <a href="./post/:id" onClick={
                             () => {
-                                getPost(post.id)
+                                onGetPostById(post.id)
                             }
                         }><p>{post.title}</p></a>
                         <p>{post.author}</p>
@@ -60,5 +80,21 @@ console.log('ppp', posts)
   }
 }
 
+/* const mapStateToProps = (state) => {
+  return {
+    postFoo: state.postConatiner.post,
+  }
+} */
 
-export default Main;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onGetPostById: (data) => dispatch(fetchByPostId(data)),
+    
+  }
+}
+
+
+export default connect(
+  
+  mapDispatchToProps
+)(Main)

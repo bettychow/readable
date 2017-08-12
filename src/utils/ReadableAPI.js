@@ -26,7 +26,7 @@ export const getAllPosts = () =>
     body: JSON.stringify(body)
   }).then(res => res.json())
 
-  export const getPost = (id) =>
+  export const getPostById = (id) =>
   fetch(`${api}/posts/${id}`, { headers })
     .then(res => res.json())
     .then(data => data)
