@@ -1,100 +1,115 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
-import CreateNewPost from './CreateNewPost'
-import { fetchByPostId } from '../Actions'
-import * as ReadableAPI from '../utils/ReadableAPI'
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import CreateNewPost from "./CreateNewPost";
+import { fetchPosts, sortByTime, fetchCats } from "../Actions";
+import * as ReadableAPI from "../utils/ReadableAPI";
+import { bindActionCreators } from 'redux'
 
 class Main extends Component {
-  
- 
+  componentDidMount() {
+    this.props.fetchPosts()
+    this.props.fetchCategories()
+  }
 
- 
-sortByTime = (posts) => {
-  let x = this.state.posts
-    x.sort(function(a,b) {
-      return (a.timestamp > b.timestamp) ? -1 : ((b.timestamp > a.timestamp) ?  1 : 0)
+  time = timestamp => {
+      let time = parseInt(timestamp);
+      let d = new Date(time); 
+      return `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}    ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+
+
+    };
+
+  renderPostList = () => {
+    console.log('ooooooooooooooooo')
+    return this.props.posts.map(post => {
+      return (
+        <li key={post.id}>
+          <a href={`/post/${post.id}`}><p>{post.title}</p></a>
+          <p>{post.author}</p>
+          <p>{post.voteScore}</p> 
+          <p>{this.time(post.timestamp)}</p>
+        </li>
+      )
     })
-      this.setState({ posts: x })
-}
+  }
 
-sortByScore = (posts) => {
-  let y = this.state.posts
-    y.sort(function(a,b) {
-      return (a.voteScore > b.voteScore) ? -1 : ((b.voteScore > a.voteScore) ? 1 : 0);
-      });
-        this.setState({ posts: y });
-}
+  renderCategoryList = () => {
+    return this.props.categories.map(category => {
+      return (
+        <li key={category.name}>
+          <a href="./category" >{category.name}</a>
+        </li>
+      )
+    })
+  }
 
-  render () {
-      const { categories, posts, onCreatePost, onGetPostByCat, onGetPostById } = this.props
-      const time = (timestamp) => {
-        let time =  parseInt(timestamp)
-        let d = new Date(time)
-        console.log('ddd', d)
-      return `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}    ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
-    }
-console.log('ccc', categories)
-console.log('ppp', posts)
+    /* onSortPostsByTime = () => {
+      const x = this.props.posts.sort((a,b) => {
+      if(a.timestamp > b.timestamp) {
+        return -1
+      } else if ( a.timestamp < b.timestamp) {
+        return 1
+      } else {
+        return 0
+      }
+      })
+      console.log('sorted fun ', x)
+      return x
+    } */
   
-  return (
-    <div>
-        <div >
-            <ul>
-                { categories.map(category => (
-                    <li key={category.name}>
-                        <a href="./category" onClick={
-                           () => {
-                               onGetPostByCat(category.name)
-                           }
-                        }>{category.name}</a>
-                    </li>
-                ))}
-            </ul>
-        </div>
-        <div >
-            <ul>
-                { posts.map(post => (
 
-                    <li key={post.id}>
-                        <a href="`./:${post.id}`" onClick={
-                            () => {
-                                onGetPostById(post.id)
-                            }
-                        }><p>{post.title}</p></a>
-                        <p>{post.author}</p>
-                        <p>{post.voteScore}</p> 
-                        <p>{time(post.timestamp)}</p>
-                    </li>
-                ))}
-            </ul>
+  render() {
+    
+    // const { posts, categories, onSortPostsByTime } = this.props;
+
+   console.log('posts', this.props.posts)
+    const time = timestamp => {
+      let time = parseInt(timestamp);
+      let d = new Date(time); 
+      return `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}    ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+
+
+    };
+
+    return (
+      <div>
+        <div>
+          <ul>
+            { this.renderCategoryList() }
+          </ul>
         </div>
-        <button onClick={(posts) => this.sortByTime(posts)}>Latest Posts First</button>
-        <button onClick={(posts) => this.sortByScore(posts)}>Posts With Highest Vote First</button>
-     
-          <CreateNewPost
-            categories={categories}
-            onCreatePost={onCreatePost}
-          />
-    </div>
-    )
+        <div>
+          <ul>
+            {this.renderPostList()}
+          </ul>
+        </div>
+        <button onClick={ () => this.props.onSortPostsByTime(this.props.posts)}>
+          Latest Posts First
+        </button>
+        <button onClick={() => this.props.sortByScore()}>
+          Posts With Highest Vote First
+        </button>
+
+        {/* <CreateNewPost categories={categories} onCreatePost={onCreatePost} /> */}
+      </div>
+    );
   }
 }
 
-/* const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    postFoo: state.postConatiner.post,
-  }
-} */
+    posts: state.allPostsContainer.posts,
+    categories: state.allPostsContainer.categories
+  };
+};
 
-const mapDispatchToProps = (dispatch) => {
-    console.log('kitty')
+const mapDispatchToProps = dispatch => {
   return {
-    onGetPostById: (data) => dispatch(fetchByPostId(data)),
-  }
-}
+    fetchPosts: () => dispatch(fetchPosts()),
+    fetchCategories: () => dispatch(fetchCats()),
+    onSortPostsByTime: (posts) => dispatch(sortByTime(posts))
+  };
+};
 
-
-export default connect(
-  mapDispatchToProps
-)(Main)
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
