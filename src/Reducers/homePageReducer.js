@@ -14,7 +14,6 @@ const homePageReducer = (state = initialState, action) => {
       const x = action.payload.sort(function(a,b) {
     return (a.voteScore > b.voteScore) ? -1 : ((b.voteScore > a.voteScore) ? 1 : 0);
     });
-  console.log('xxx', x)
       return {
         ...state,
         posts: x
@@ -22,7 +21,8 @@ const homePageReducer = (state = initialState, action) => {
     }
     break
     case SORT_BY_TIME: {
-  const newSortedPosts = action.payload.sort((a,b) => {
+      const newPostsState = Object.assign([], state.posts);
+      newPostsState.sort((a,b) => {
       if(a.timestamp > b.timestamp) {
         return -1
       } else if ( a.timestamp < b.timestamp) {
@@ -31,10 +31,10 @@ const homePageReducer = (state = initialState, action) => {
         return 0
       }
     })
-
+console.log('pppp', newPostsState)
       return {
 		    ...state,
-	    	posts: newSortedPosts
+	    	posts: newPostsState
       };
     }
     break

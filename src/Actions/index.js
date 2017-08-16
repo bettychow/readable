@@ -4,16 +4,16 @@ export const FETCH_POST_BY_ID = "FETCH_POST_BY_ID";
 export const FETCH_ALL_POSTS = "FETCH_ALL_POSTS";
 export const FETCH_ALL_CATS = "FETCH_ALL_CATS";
 export const SORT_BY_TIME = "SORT_BY_TIME"
+export const CREATE_NEW_POST = "CREATE_NEW_POST"
 
 
 export const fetchByPostId = id => {
-  const data = ReadableAPI.getPostById(id);
-
-  console.log("data", data);
-  return {
-    type: FETCH_POST_BY_ID,
-    payload: data
-  };
+  ReadableAPI
+    .getPostById(id)
+    .then(payload => ({
+      type: FETCH_POST_BY_ID,
+      payload
+    }));
 };
 
 export const fetchPosts = () => dispatch => {
@@ -49,11 +49,16 @@ export const fetchByCat = id => {
   };
 };
 
-export const sortByTime = (posts) => {
-   console.log('hello kitty')
-     return {
-       type: SORT_BY_TIME,
-       payload: posts
-     }
-   };
+export const sortByTime = () => {
+  return {
+    type: SORT_BY_TIME,
+  }
+};
+
+export const createNewPost = () => {
+  return {
+    type: CREATE_NEW_POST,
+    
+  }
+}
 

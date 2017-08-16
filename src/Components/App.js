@@ -64,7 +64,14 @@ class App extends Component {
 
     return (
       <div className="App">
-        <Route exact path="/" render={() => <Main />} />
+        <Route 
+          exact path="/" 
+          render={() => 
+          <div>
+            <Main />
+            <PostDetails />
+          </div>
+          } />
         {/* <Route exact path="/:category" component={PostsByCategory} /> */}
         <Route exact path="/post/:post_id" component={PostDetails} />
       </div>

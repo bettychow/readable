@@ -20,7 +20,6 @@ handleSubmit = (e) => {
         }
 
 handleChange = (e) => {
-    console.log('qq', e.target.value)
   this.setState({ selectedValue: e.target.value})
 }
 
