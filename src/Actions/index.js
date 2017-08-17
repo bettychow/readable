@@ -7,14 +7,20 @@ export const SORT_BY_TIME = "SORT_BY_TIME"
 export const CREATE_NEW_POST = "CREATE_NEW_POST"
 
 
-export const fetchByPostId = id => {
-  ReadableAPI
-    .getPostById(id)
-    .then(payload => ({
-      type: FETCH_POST_BY_ID,
-      payload
-    }));
+export const fetchByPostId = id => dispatch => {
+  console.log('id', id)
+  ReadableAPI.getPostById(id)
+  .then(post => {
+    
+     dispatch({ 
+       type: FETCH_POST_BY_ID, 
+       payload: post
+     });
+   })
+   .catch(err => console.log(err));
 };
+    
+
 
 export const fetchPosts = () => dispatch => {
   ReadableAPI.getAllPosts()

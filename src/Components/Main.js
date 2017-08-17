@@ -5,6 +5,7 @@ import CreateNewPost from "./CreateNewPost";
 import { fetchPosts, sortByTime, fetchCats, createNewPost, fetchByPostId } from "../Actions";
 import * as ReadableAPI from "../utils/ReadableAPI";
 import { bindActionCreators } from 'redux'
+import PostDetails from './PostDetails'
 
 class Main extends Component {
   componentDidMount() {
@@ -57,6 +58,9 @@ class Main extends Component {
             {this.renderPostList()}
           </ul>
         </div>
+        <div>
+          <PostDetails />
+          </div>
         <button onClick={ () => this.props.onSortPostsByTime()}>
           Latest Posts First
         </button>
