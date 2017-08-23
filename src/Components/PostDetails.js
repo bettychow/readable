@@ -1,16 +1,15 @@
 import React, { Component } from "react";
-import serializeForm from "form-serialize";
 import { connect, bindActionCreators } from "react-redux";
 import { fetchByPostId } from "../Actions";
-const randomID = require("random-id");
+
 
 class PostDetails extends Component {
-  /*componentDidMount() {
-    console.log('postId', this.props.match.params.post_id)
-    this.props.fetchByPostId(this.props.match.params.post_id);
+  componentDidMount() {
+    console.log('postId', this.props.match.params.id)
+    this.props.fetchByPostId(this.props.match.params.id);
     console.log('postdetails')
-  } */
 
+  }
 
   render() {
 

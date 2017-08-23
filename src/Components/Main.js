@@ -24,7 +24,7 @@ class Main extends Component {
     return this.props.posts.map(post => {
       return (
         <li key={post.id}>
-          <p onClick={() => this.props.onGetPostDetails(post.id)} >{post.title}</p>
+          <Link to={ `/post/${post.id}` }>{post.title}</Link>
           <p>{post.author}</p>
           <p>{post.voteScore}</p> 
           <p>{this.time(post.timestamp)}</p>
@@ -34,7 +34,6 @@ class Main extends Component {
   }
 
   renderCategoryList = () => {
-    console.log('ppp', this.props.categories)
     return this.props.categories.map(category => {
       return (
         <li key={category.name}>

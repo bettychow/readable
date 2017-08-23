@@ -31,7 +31,7 @@ const homePageReducer = (state = initialState, action) => {
         return 0
       }
     })
-console.log('pppp', newPostsState)
+
       return {
 		    ...state,
 	    	posts: newPostsState
