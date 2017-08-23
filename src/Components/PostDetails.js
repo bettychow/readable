@@ -1,13 +1,15 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom'
 import { connect, bindActionCreators } from "react-redux";
 import { fetchByPostId } from "../Actions";
 
 
 class PostDetails extends Component {
   componentDidMount() {
-    console.log('postId', this.props.match.params.id)
-    this.props.fetchByPostId(this.props.match.params.id);
-    console.log('postdetails')
+    this.props.match.params.post_id
+    this.props.fetchByPostId(this.props.match.params.post_id);
+ // const { id } = this.props.match.params
+    console.log('this.props', this.props)
 
   }
 
@@ -59,7 +61,7 @@ class PostDetails extends Component {
 
 const mapStateToProps = state => {
   return {
-    post: state.singlePostContainer.post
+   post: state.singlePostContainer.post
   };
 };
 

@@ -35,7 +35,7 @@ ReactDOM.render(
       <div>
         <Switch>
           <Route exact path="/post/post_new" component={CreateNewPost} />
-          <Route path="/post/:post_id" component={PostDetails} />
+          <Route exact path="/post/:id" component={PostDetails} />
           <Route exact path="/" component={Main} />
         </Switch>
       </div>
