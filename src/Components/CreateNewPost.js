@@ -1,60 +1,107 @@
 import React, { Component } from 'react'
-import serializeForm from 'form-serialize'
+import { Field, reduxForm } from 'redux-form'
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { createPost } from '../Actions'
 const randomID = require("random-id")
 
-
 class CreateNewPost extends Component {
-  
-state = {
-    postInput: '',
-    selectedValue: ''
-}
 
-updatePostInput = input => this.setState({ postInput: input })
-
-handleSubmit = (e) => {
-        e.preventDefault()
-        const values = serializeForm(e.target, { hash: true })
-        if (this.props.onCreatePost) 
-            this.props.onCreatePost(values)
-        }
-
-handleChange = (e) => {
-  this.setState({ selectedValue: e.target.value})
-}
-
-
-  render () {
-const { postInput, selectedValue } = this.state
-const { categories } = this.props
+renderField = (field) => {
+  const { meta: { touched, error } }  = field
+  const className = `form-group ${ touched && error ? 'has-danger' : '' }`
 
   return (
-    <div>
-      <h2>Add A New Post</h2>
-      <form onSubmit={this.handleSubmit}>
-        <div>
-          <input type="text" name="title" placeholder="Title"/>
-          <textArea type="text" name="body" placeholder="Content"/>
-          <input type="hidden" id="date" name="timestamp" value={Date.now()}/>
-          <input type="text" name="author" placeholder="Your Name"/>
-          <input type="hidden" name="voteScore" value={ 0 }/>
-          <input type="hidden" name="deleted" value={ false }/>
-          <input type="hidden" id="randomId" name="id" value={randomID()}/>
-          <select value={selectedValue} name="category" onChange={this.handleChange}>
-              <option disabled >Pick a category</option>
-              {
+    <div className={className}>
+      <label>{field.label}</label>
+      <input 
+        className="form-control"
+        type="text"
+        {...field.input}
+      />
+      <div className="text-help">
+        {touched ? error : ''}
+      </div>
+    </div>
+  )
+}
+
+onSubmit = values => {
+  values.id = randomID()
+  values.timestamp = Date.now()
+  values.voteScore = 0
+  this.props.createPost(values, () => {
+    this.props.history.push('/')
+  })
+}
+
+  render () {
+
+  const { handleSubmit, categories } = this.props
+  console.log('kkk', categories)
+  return (
+      <div>
+        <form onSubmit={handleSubmit(this.onSubmit)}>
+          <Field
+            label="Title"
+            name="title"
+            component={this.renderField}
+          />
+          <Field
+            label="Category"
+            name="category"
+            component="select"
+          >
+            <option />
+            {
                 categories.map(category => (
                   <option value={ category.name}>{category.name}</option>
                 ))
               }
-          </select>
-          <button>Submit New Post</button>
-        </div>
-      </form>        
-    </div>
+          </Field>
+          <Field
+            label="Content"
+            name="body"
+            component={this.renderField}
+          />
+          <Field
+            label="Name"
+            name="author"
+            component={this.renderField}
+          />
+          
+          <button type="submit">Submit</button>
+          <Link to="/">
+            Cancel
+          </Link>
+        </form>
+      </div> 
     )
   }
 }
 
+const validate = (values) => {
+  const errors = {}
 
-export default CreateNewPost;
+  if(!values.title) {
+    errors.title = "Enter a title"
+  }
+  if(!values.category) {
+    errors.category = "Enter a category"
+  }
+  if(!values.content) {
+    errors.content = "Enter some content"
+  }
+  return errors
+}
+
+const mapStateToProps = state => {
+  categories: state.allPostsContainer.categories
+}
+
+export default reduxForm({
+  validate,
+  form: 'PostsNewForm'
+})(
+  connect(null, { createPost })(CreateNewPost)
+)

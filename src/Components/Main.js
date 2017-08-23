@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import CreateNewPost from "./CreateNewPost";
 import { fetchPosts, sortByTime, fetchCats, createNewPost, fetchByPostId } from "../Actions";
 import * as ReadableAPI from "../utils/ReadableAPI";
 import { bindActionCreators } from 'redux'
@@ -35,6 +34,7 @@ class Main extends Component {
   }
 
   renderCategoryList = () => {
+    console.log('ppp', this.props.categories)
     return this.props.categories.map(category => {
       return (
         <li key={category.name}>
@@ -67,8 +67,12 @@ class Main extends Component {
         <button onClick={() => this.props.sortByScore()}>
           Posts With Highest Vote First
         </button>
-
-        {<CreateNewPost categories={this.props.categories} onCreatePost={this.props.onCreatePost()} />}
+        <button>
+          <Link to="/post/post_new">
+            Create New Post 
+          </Link>
+        </button>
+        
       </div>
     );
   }
@@ -86,7 +90,6 @@ const mapDispatchToProps = dispatch => {
     fetchPosts: () => dispatch(fetchPosts()),
     fetchCategories: () => dispatch(fetchCats()),
     onSortPostsByTime: () => dispatch(sortByTime()),
-    onCreatePost: (values) => dispatch(createNewPost(values)),
     onGetPostDetails: (id) => dispatch(fetchByPostId(id)),
   };
 };

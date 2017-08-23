@@ -1,13 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./index.css";
-import App from "./Components/App";
 import registerServiceWorker from "./registerServiceWorker";
 import { createStore, applyMiddleware, compose } from "redux";
-import reducer from "./Reducers";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
+
+import reducer from "./Reducers";
+import CreateNewPost from "./Components/CreateNewPost";
+import PostDetails from "./Components/PostDetails";
+import Main from "./Components/Main";
+import Category from "./Components/Category";
 
 const logger = store => next => action => {
   console.group(action.type);
@@ -26,11 +30,17 @@ const store = createStore(
 );
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </BrowserRouter>,
+  <Provider store={store}>
+    <BrowserRouter>
+      <div>
+        <Switch>
+          <Route exact path="/post/post_new" component={CreateNewPost} />
+          <Route path="/post/:post_id" component={PostDetails} />
+          <Route exact path="/" component={Main} />
+        </Switch>
+      </div>
+    </BrowserRouter>
+  </Provider> ,
   document.getElementById("root")
 );
 registerServiceWorker();
