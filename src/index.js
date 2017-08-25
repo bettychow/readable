@@ -12,6 +12,7 @@ import CreateNewPost from "./Components/CreateNewPost";
 import PostDetails from "./Components/PostDetails";
 import Main from "./Components/Main";
 import Category from "./Components/Category";
+import EditPost from "./Components/EditPost";
 
 const logger = store => next => action => {
   console.group(action.type);
@@ -35,7 +36,9 @@ ReactDOM.render(
       <div>
         <Switch>
           <Route exact path="/post/post_new" component={CreateNewPost} />
-          <Route exact path="/post/:id" component={PostDetails} />
+          <Route exact path="/post/:post_id" component={PostDetails} />
+          <Route exact path="/post/edit/:post_id" component={EditPost} />
+          <Route exact path="/:category" component={Category} />
           <Route exact path="/" component={Main} />
         </Switch>
       </div>

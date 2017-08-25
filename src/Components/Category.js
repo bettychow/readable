@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
+import { fetchByCategory } from '../Actions'
+import { connect } from 'react-redux'
 
 class Category extends Component {
   
-
+  componentDidMount() {
+    console.log('aaa', this.props.match.params.category)
+    this.props.fetchPostsByCategory(this.props.match.params.category)
+  }
 
 
   render () {
@@ -31,5 +36,10 @@ console.log('postbycat', postByCat)
   }
 }
 
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchPostsByCategory: (category) => dispatch(fetchByCategory(category))
+  } 
+}
 
-export default Category;
+export default connect(null, mapDispatchToProps)(Category)

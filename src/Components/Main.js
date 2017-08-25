@@ -4,10 +4,11 @@ import { connect } from "react-redux";
 import { fetchPosts, sortByTime, fetchCats, createNewPost, fetchByPostId } from "../Actions";
 import * as ReadableAPI from "../utils/ReadableAPI";
 import { bindActionCreators } from 'redux'
-import PostDetails from './PostDetails'
+
 
 class Main extends Component {
   componentDidMount() {
+    console.log('mmm', this)
     this.props.fetchPosts()
     this.props.fetchCategories()
   }
@@ -21,7 +22,11 @@ class Main extends Component {
     };
 
   renderPostList = () => {
-    return this.props.posts.map(post => {
+
+    const filteredPosts = this.props.posts.filter(post => {
+      return post.deleted === false
+    })
+    return filteredPosts.map(post => {
       return (
         <li key={post.id}>
           <Link to={ `/post/${post.id}` }>{post.title}</Link>
@@ -37,7 +42,7 @@ class Main extends Component {
     return this.props.categories.map(category => {
       return (
         <li key={category.name}>
-          <a href="./category" >{category.name}</a>
+          <Link to ={`./${category.name}`} >{category.name}</Link>
         </li>
       )
     })
@@ -57,9 +62,6 @@ class Main extends Component {
             {this.renderPostList()}
           </ul>
         </div>
-        <div>
-          <PostDetails />
-          </div>
         <button onClick={ () => this.props.onSortPostsByTime()}>
           Latest Posts First
         </button>

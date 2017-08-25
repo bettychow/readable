@@ -18,7 +18,6 @@ export const getAllPosts = () =>
       return data;
     })
     
-
 export const create = body =>
   fetch(`${api}/posts`, {
     method: "POST",
@@ -38,3 +37,60 @@ export const getPostByCat = () =>
   fetch(`${api}/category/posts`, { headers })
     .then(res => res.json())
     .then(data => data);
+
+export const deletePost = id =>
+  fetch(`${api}/posts/${id}`, { 
+    method: "DELETE", 
+    headers: {
+      ...headers,
+      "Content-Type": "application/json"
+    }
+    })
+
+export const editPost = (id, post) => 
+  fetch(`${api}/posts/${id}`, {
+    method: "PUT", 
+    headers: {
+      ...headers,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(post)
+  })
+
+  export const upVote = (id) => 
+    fetch(`${api}/posts/${id}`, {
+      method: "POST", 
+      headers: {
+        ...headers,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(
+        {option: "upVote"}
+      )
+    })
+    .then(res => res.json())
+
+
+  export const createComment = body => 
+  fetch(`${api}/comments`, {
+    method: "POST",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  }).then(res => res.json());
+
+  export const getAllComments = (id) =>
+  fetch(`${api}/posts/${id}/comments`, { headers })
+  .then(res => {
+    const data = res.json();  
+    return data;
+  })
+
+  export const getPostsByCat = category => 
+  fetch(`${api}/${category}/posts`, { headers })
+  .then(res => {
+    const data = res.json();  
+    return data;
+  })

@@ -1,6 +1,6 @@
 import { FETCH_ALL_POSTS } from "../Actions";
 import { FETCH_ALL_CATS } from "../Actions";
-import { SORT_BY_TIME } from "../Actions";
+import { SORT_BY_TIME, DELETE_POST_BY_ID } from "../Actions";
 
 const initialState = {
   posts: [],
@@ -46,6 +46,20 @@ const homePageReducer = (state = initialState, action) => {
       };
     }
     break
+   /* case DELETE_POST_BY_ID:
+      const id = action.payload
+      const newPostsState = Object.assign([], state.posts)
+    newPostsState.map((post, index) => {
+      if (post.id === id) {
+        newPostsState.splice(index, 1)
+      }
+    }) 
+
+   return {
+     ...state,
+     posts: newPostsState
+   }
+    break  */
     default:
       return state;
   }
