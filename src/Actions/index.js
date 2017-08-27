@@ -1,6 +1,7 @@
 import * as ReadableAPI from "../utils/ReadableAPI";
 
 export const FETCH_POST_BY_ID = "FETCH_POST_BY_ID";
+export const FETCH_COMMENT_BY_ID = "FETCH_COMMENT_BY_ID"
 export const FETCH_ALL_POSTS = "FETCH_ALL_POSTS";
 export const FETCH_ALL_CATS = "FETCH_ALL_CATS";
 export const FETCH_POST_BY_CAT = "FETCH_POST_BY_CAT"
@@ -10,6 +11,7 @@ export const SORT_BY_SCORE_LOWEST = "SORT_BY_SCORE_LOWEST"
 export const SORT_BY_SCORE_HIGHEST ="SORT_BY_SCORE_HIGHEST"
 export const CREATE_NEW_POST = "CREATE_NEW_POST"
 export const DELETE_POST_BY_ID = "DELETE_POST_BY_ID"
+export const DELETE_COMMENT_BY_ID ="DELETE_COMMENT_BY_ID"
 export const UPDATE_POST = "UPATE_POST"
 export const UPVOTE ="UPVOTE"
 export const CREATE_COMMENT = "CREATE_COMMENT"
@@ -108,6 +110,15 @@ export const deleteByPostId = (id, callback) => {
   }
 }
 
+export const deleteByCommentId = (id) => {
+  ReadableAPI.deleteComment(id)
+
+  return {
+    type: DELETE_COMMENT_BY_ID,
+    payload: id
+  }
+}
+
 export const updatePost = (values, id, callback) => {
   ReadableAPI.editPost(id, values)
   // .then(() => callback())
@@ -152,7 +163,27 @@ export const fetchComments = id => dispatch => {
    })
    .catch(err => console.log(err));
 };
-  
+
+export const fetchCommentById = id => dispatch => {
+  ReadableAPI.getCommentById(id)
+  .then(comment => {
+     dispatch({ 
+       type: FETCH_COMMENT_BY_ID, 
+       payload: comment
+     });
+   })
+   .catch(err => console.log(err));
+};
+
+/*export const updateComment = (values, id, callback) => {
+  ReadableAPI.editPost(id, values)
+  // .then(() => callback())
+  return {
+    type: UPDATE_COMMENT,
+    payload: values
+  }
+} */
+
 export const fetchByCategory = category => dispatch => {
   ReadableAPI.getPostsByCat(category)
   .then(posts => {

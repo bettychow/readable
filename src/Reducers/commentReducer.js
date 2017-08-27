@@ -1,7 +1,8 @@
-import { CREATE_COMMENT, FETCH_ALL_COMMENTS } from "../Actions";
+import { CREATE_COMMENT, FETCH_ALL_COMMENTS, FETCH_COMMENT_BY_ID } from "../Actions";
 
 const initialState = {
-  comments: []
+  comments: [],
+  selectedComment:{}
 };
 
 const commentReducer = (state = initialState, action) => {
@@ -10,6 +11,13 @@ const commentReducer = (state = initialState, action) => {
       return {
         ...state,
         comments: action.payload
+      };
+    }
+    break
+    case FETCH_COMMENT_BY_ID: {
+      return {
+        ...state,
+        selectedComment: action.payload
       };
     }
     break

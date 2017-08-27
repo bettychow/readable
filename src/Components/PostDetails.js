@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom'
 import { connect, bindActionCreators } from "react-redux";
-import { fetchByPostId, deleteByPostId, vote, fetchComments } from "../Actions";
+import { fetchByPostId, deleteByPostId, deleteByCommentId, vote, voteComment, fetchComments, fetchCommentById } from "../Actions";
 import { Field, reduxForm } from 'redux-form'
 import CreateNewComment from './CreateNewComment'
 import EditPost from './EditPost'
+import EditComment from './EditComment'
 import Modal from 'react-modal'
 const randomID = require("random-id")
 
@@ -17,6 +18,7 @@ class PostDetails extends Component {
 
   state = {
     editPostModalOpen: false,
+    editCommentModalOpen: false,
     commentModalOpen: false
   }
 
@@ -29,6 +31,18 @@ class PostDetails extends Component {
   closeEditPostModal = () => {
     this.setState(() => ({
       editPostModalOpen: false,
+    }))
+  }
+  openEditCommentModal = (id) => {
+    this.setState(() => ({
+      editCommentModalOpen: true,
+    }))
+    this.props.fetchCommentById(id)
+  }
+
+  closeEditCommentModal = () => {
+    this.setState(() => ({
+      editCommentModalOpen: false,
     }))
   }
   openCommentModal = () => {
@@ -66,16 +80,28 @@ class PostDetails extends Component {
     const option = {option: "downVote"}
     this.props.vote(id, option)
   }
+
+  onDeleteComment = id => {
+    this.props.deleteByCommentId(id)
+    this.props.fetchComments(this.props.match.params.post_id)
+  }
+
+  
   
   renderCommentList = () => {   
+    console.log('ssss', this.props.comment)
         return this.props.comments.map(comment => {
           return (
-            <li key={comment.id}>
-              <p>{comment.body}</p>
-              <p>{comment.author}</p>
-              <p>{comment.voteScore}</p> 
-              <p>{this.time(comment.timestamp)}</p>
-            </li>
+            <div>
+              <li key={comment.id}>
+                <p>{comment.body}</p>
+                <p>{comment.author}</p>
+                <p>{comment.voteScore}</p> 
+                <p>{this.time(comment.timestamp)}</p>
+              </li>
+              <button onClick={() => this.onDeleteComment(comment.id)}>Delete</button>
+              <button onClick={() => this.openEditCommentModal(comment.id)}>Edit</button>
+            </div>
           )
         })
       }
@@ -85,10 +111,12 @@ class PostDetails extends Component {
     if(!this.props.post) {
       return <div></div>
     }
-
+    if(!this.props.comments) {
+      return <div></div>
+    }
    
     const { handleSubmit, categories } = this.props
-    const { editPostModalOpen, commentModalOpen } = this.state
+    const { editPostModalOpen, commentModalOpen, editCommentModalOpen } = this.state
 
     return (
       <div>
@@ -118,9 +146,9 @@ class PostDetails extends Component {
             </li>
           </ul>
         </div>
-        <button onClick={() => this.onDeletePost(this.props.post.id)}>Delete</button>
         <button onClick={() => this.onUpVote(this.props.post.id)}>Thumbs Up</button>
         <button onClick={() => this.onDownVote(this.props.post.id)}>Thumbs Down</button>
+        <button onClick={() => this.onDeletePost(this.props.post.id)}>Delete</button>
         <button onClick={() => this.openEditPostModal()}>Edit</button>
         <button onClick={() => this.openCommentModal()}>Reply</button>
         <Modal
@@ -130,10 +158,10 @@ class PostDetails extends Component {
           onRequestClose={this.closeEditPostModal}
           contentLabel='Modal'
         >
-         <div>
-           <EditPost />
-           <button onClick={() => this.closeEditPostModal()}>Close</button>
-           </div>
+          <div>
+            <EditPost />
+            <button onClick={() => this.closeEditPostModal()}>Close</button>
+          </div>
         </Modal>
         <Modal
           className='modal'
@@ -149,6 +177,19 @@ class PostDetails extends Component {
         </Modal>
     
         <div>{this.renderCommentList()}</div>
+
+        <Modal
+          className='modal'
+          overlayClassName='overlay'
+          isOpen={editCommentModalOpen}
+          onRequestClose={this.closeEditCommentModal}
+          contentLabel='Modal'
+        >
+         <div>
+           <EditComment id={this.props.comment.id}/>
+           <button onClick={() => this.closeEditCommentModal()}>Close</button>
+           </div>
+        </Modal>
        
       </div>
     );
@@ -158,16 +199,19 @@ class PostDetails extends Component {
 const mapStateToProps = state => {
   return {
    post: state.singlePostContainer.post,
-   comments: state.commentContainer.comments
+   comments: state.commentContainer.comments,
+   comment: state.commentContainer.selectedComment
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchByPostId: (id) => dispatch(fetchByPostId(id)),
-    deleteByPostId: (id) => dispatch(deleteByPostId(id)),
+    fetchByPostId: id => dispatch(fetchByPostId(id)),
+    deleteByPostId: id => dispatch(deleteByPostId(id)),
+    deleteByCommentId: id => dispatch(deleteByCommentId(id)),
     vote: (id, option) => dispatch(vote(id, option)),
-    fetchComments: (id) => dispatch(fetchComments(id))
+    fetchComments: id => dispatch(fetchComments(id)),
+    fetchCommentById: id => dispatch(fetchCommentById(id))
   };
 };
 

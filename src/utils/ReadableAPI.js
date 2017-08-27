@@ -47,6 +47,15 @@ export const deletePost = id =>
     }
     })
 
+export const deleteComment = id =>
+  fetch(`${api}/comments/${id}`, { 
+    method: "DELETE", 
+    headers: {
+      ...headers,
+      "Content-Type": "application/json"
+    }
+  })
+
 export const editPost = (id, post) => 
   fetch(`${api}/posts/${id}`, {
     method: "PUT", 
@@ -85,6 +94,11 @@ export const editPost = (id, post) =>
     const data = res.json();  
     return data;
   })
+
+  export const getCommentById = id =>
+  fetch(`${api}/comments/${id}`, { headers })
+    .then(res => res.json())
+    .then(data => data);
 
   export const getPostsByCat = category => 
   fetch(`${api}/${category}/posts`, { headers })
