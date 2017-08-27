@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { createComment } from '../Actions'
+import { createComment, fetchComments } from '../Actions'
 const randomID = require("random-id")
 
 class CreateNewComment extends Component {
@@ -32,15 +32,16 @@ class CreateNewComment extends Component {
     values.timestamp = Date.now()
     values.voteScore = 0
     this.props.createComment(values)
+    this.props.fetchComments(this.props.post.id)
   }
 
   render() {
 
 
-    const { handleSubmit, categories, id } = this.props
+    const { handleSubmit, id } = this.props
     return (
       <div>
-
+      <h1>Reply</h1>
       
       <form onSubmit={handleSubmit(this.onSubmit)}>
         
@@ -56,9 +57,6 @@ class CreateNewComment extends Component {
         />
         
         <button type="submit">Submit</button>
-        <Link to="/">
-          Cancel
-        </Link>
       </form>
       </div>
 
@@ -84,13 +82,13 @@ const validate = (values) => {
 const mapStateToProps = state => {
   return {
    post: state.singlePostContainer.post,
-   categories: state.allPostsContainer.categories
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    createComment: (values) => dispatch(createComment(values))
+    createComment: (values) => dispatch(createComment(values)),
+    fetchComments: (id) => dispatch(fetchComments(id))
   };
 };
 

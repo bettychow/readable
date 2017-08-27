@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { fetchPosts, sortByTime, fetchCats, createNewPost, fetchByPostId } from "../Actions";
+import { fetchPosts, sortByTime, sortByScore, fetchCats, createNewPost, fetchByPostId } from "../Actions";
 import * as ReadableAPI from "../utils/ReadableAPI";
 import { bindActionCreators } from 'redux'
+import Modal from 'react-modal'
+import CreateNewPost from './CreateNewPost'
 
 
 class Main extends Component {
@@ -11,6 +13,38 @@ class Main extends Component {
     console.log('mmm', this)
     this.props.fetchPosts()
     this.props.fetchCategories()
+  }
+
+  state = {
+    createPostModalOpen: false,
+    byTime: "",
+    byScore: ""
+  }
+
+  openCreatePostModal = () => {
+    this.setState(() => ({
+      createPostModalOpen: true,
+    }))
+  }
+
+  closeCreatePostModal = () => {
+    this.setState(() => ({
+      createPostModalOpen: false,
+    }))
+  }
+
+  handleChangeTime = (event) => {
+    this.setState( {
+      byTime: event.target.value
+    })
+    this.props.onSortPostsByTime(event.target.value)
+  }
+
+  handleChangeScore = event => {
+    this.setState({
+      byScore: event.target.value
+    })
+    this.props.onSortPostsByScore(event.target.value)
   }
 
   time = timestamp => {
@@ -48,32 +82,57 @@ class Main extends Component {
     })
   }
 
+  
   render() {
-    
+    const { createPostModalOpen } = this.state
+    console.log(this.state)
     return (
       <div>
         <div>
           <ul>
             { this.renderCategoryList() }
-          </ul>
+          </ul>   
         </div>
+        <form>
+        <label>
+          Sort Post By Time:
+          <select value={this.state.value} onChange={this.handleChangeTime}>
+            <option />
+            <option value="latestFirst">Latest First</option>
+            <option value="oldestFirst">Oldest First</option>
+          </select>
+        </label>
+      </form>
+      <form>
+        <label>
+          Sort Post By Vote Score:
+          <select value={this.state.value} onChange={this.handleChangeScore}>
+            <option />
+            <option value="lowestFirst">Lowest First</option>
+            <option value="highestFirst">Highest First</option>
+          </select>
+        </label>
+      </form>
+        <button onClick={() => this.openCreatePostModal()}>
+          Create New Post       
+        </button>
         <div>
           <ul>
             {this.renderPostList()}
           </ul>
         </div>
-        <button onClick={ () => this.props.onSortPostsByTime()}>
-          Latest Posts First
-        </button>
-        <button onClick={() => this.props.sortByScore()}>
-          Posts With Highest Vote First
-        </button>
-        <button>
-          <Link to="/post/post_new">
-            Create New Post 
-          </Link>
-        </button>
-        
+        <Modal
+          className='modal'
+          overlayClassName='overlay'
+          isOpen={createPostModalOpen}
+          onRequestClose={this.closeCreatePostModal}
+          contentLabel='Modal'
+        >
+         <div>
+           <CreateNewPost />
+           <button onClick={() => this.closeCreatePostModal()}>Close</button>
+           </div>
+        </Modal>
       </div>
     );
   }
@@ -90,7 +149,8 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchPosts: () => dispatch(fetchPosts()),
     fetchCategories: () => dispatch(fetchCats()),
-    onSortPostsByTime: () => dispatch(sortByTime()),
+    onSortPostsByTime: (e) => dispatch(sortByTime(e)),
+    onSortPostsByScore: (e) => dispatch(sortByScore(e)),
     onGetPostDetails: (id) => dispatch(fetchByPostId(id)),
   };
 };

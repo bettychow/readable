@@ -57,9 +57,7 @@ class EditPost extends Component {
           <span>Time: </span><span>{this.props.initialValues.timestamp}</span>
           <div>
           <button type="submit">Submit</button>
-          <Link to="/">
-            Cancel
-          </Link>
+        
           </div>
         </form>
       </div> 

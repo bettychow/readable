@@ -1,6 +1,6 @@
 import { FETCH_ALL_POSTS } from "../Actions";
 import { FETCH_ALL_CATS } from "../Actions";
-import { SORT_BY_TIME, DELETE_POST_BY_ID } from "../Actions";
+import { SORT_BY_TIME_LATEST, SORT_BY_TIME_OLDEST, SORT_BY_SCORE_LOWEST, SORT_BY_SCORE_HIGHEST, DELETE_POST_BY_ID } from "../Actions";
 
 const initialState = {
   posts: [],
@@ -20,7 +20,7 @@ const homePageReducer = (state = initialState, action) => {
       };
     }
     break
-    case SORT_BY_TIME: {
+    case SORT_BY_TIME_LATEST: {
       const newPostsState = Object.assign([], state.posts);
       newPostsState.sort((a,b) => {
       if(a.timestamp > b.timestamp) {
@@ -38,6 +38,61 @@ const homePageReducer = (state = initialState, action) => {
       };
     }
     break
+    case SORT_BY_TIME_OLDEST: {
+      const newPostsState = Object.assign([], state.posts);
+      newPostsState.sort((a,b) => {
+      if(a.timestamp > b.timestamp) {
+        return 1
+      } else if ( a.timestamp < b.timestamp) {
+        return -1
+      } else {
+        return 0
+      }
+    })
+
+      return {
+		    ...state,
+	    	posts: newPostsState
+      };
+    }
+    break
+    
+    case SORT_BY_SCORE_HIGHEST: {
+      const newPostsState = Object.assign([], state.posts);
+      newPostsState.sort((a,b) => {
+      if(a.voteScore > b.voteScore) {
+        return -1
+      } else if ( a.voteScore < b.voteScore) {
+        return 1
+      } else {
+        return 0
+      }
+    })
+
+      return {
+		    ...state,
+	    	posts: newPostsState
+      };
+    }
+    break
+    case SORT_BY_SCORE_LOWEST: {
+      const newPostsState = Object.assign([], state.posts);
+      newPostsState.sort((a,b) => {
+      if(a.voteScore > b.voteScore) {
+        return 1
+      } else if ( a.voteScore < b.voteScore) {
+        return -1
+      } else {
+        return 0
+      }
+    })
+
+      return {
+		    ...state,
+	    	posts: newPostsState
+      };
+    }
+    break 
     case FETCH_ALL_CATS: {
   
       return {

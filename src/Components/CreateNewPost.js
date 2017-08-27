@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { fetchCats, createPost } from '../Actions'
+import { fetchCats, createPost, fetchPosts } from '../Actions'
 const randomID = require("random-id")
 
 class CreateNewPost extends Component {
@@ -35,15 +35,14 @@ onSubmit = values => {
   values.id = randomID()
   values.timestamp = Date.now()
   values.voteScore = 0
-  this.props.createPost(values, () => {
-    this.props.history.push('/')
-  })
+  this.props.createPost(values)
+  this.props.fetchPosts()
 }
 
   render () {
 
   const { handleSubmit, categories } = this.props
-  console.log('kkk', this.props.categories)
+ 
   return (
       <div>
         <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -110,5 +109,5 @@ export default reduxForm({
   validate,
   form: 'PostsNewForm'
 })(
-  connect(mapStateToProps, { fetchCats, createPost })(CreateNewPost)
+  connect(mapStateToProps, { fetchCats, createPost, fetchPosts })(CreateNewPost)
 )

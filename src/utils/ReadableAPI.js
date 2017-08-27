@@ -57,16 +57,14 @@ export const editPost = (id, post) =>
     body: JSON.stringify(post)
   })
 
-  export const upVote = (id) => 
+  export const vote = (id, option) => 
     fetch(`${api}/posts/${id}`, {
       method: "POST", 
       headers: {
         ...headers,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(
-        {option: "upVote"}
-      )
+      body: JSON.stringify(option)
     })
     .then(res => res.json())
 

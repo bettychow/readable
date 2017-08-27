@@ -1,4 +1,4 @@
-import { FETCH_POST_BY_ID, DELETE_POST_BY_ID } from "../Actions";
+import { FETCH_POST_BY_ID, DELETE_POST_BY_ID, UPVOTE } from "../Actions";
 
 const initialState = {
   post: {}
@@ -17,6 +17,13 @@ const postByIdReducer = (state = initialState, action) => {
       return {
         ...state,
         post: {}
+      };
+    }
+    break
+    case UPVOTE: {
+      return {
+        ...state,
+        post: action.payload
       };
     }
     break
