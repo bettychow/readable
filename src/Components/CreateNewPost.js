@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { fetchCats, createPost, fetchPosts } from '../Actions'
+import { fetchCats, createPost, fetchPosts, fetchByCategory } from '../Actions'
 const randomID = require("random-id")
 
 class CreateNewPost extends Component {
@@ -37,6 +37,7 @@ onSubmit = values => {
   values.voteScore = 0
   this.props.createPost(values)
   this.props.fetchPosts()
+  this.props.fetchByCategory(values.category)
 }
 
   render () {
@@ -51,6 +52,7 @@ onSubmit = values => {
             name="title"
             component={this.renderField}
           />
+          Category
           <Field
             label="Category"
             name="category"
@@ -101,7 +103,8 @@ const validate = (values) => {
 
 const mapStateToProps = state => {
   return {
-  categories: state.allPostsContainer.categories
+  categories: state.allPostsContainer.categories,
+  posts: state.postByCatContainer.posts
   }
 }
 
@@ -109,5 +112,5 @@ export default reduxForm({
   validate,
   form: 'PostsNewForm'
 })(
-  connect(mapStateToProps, { fetchCats, createPost, fetchPosts })(CreateNewPost)
+  connect(mapStateToProps, { fetchCats, createPost, fetchPosts, fetchByCategory })(CreateNewPost)
 )

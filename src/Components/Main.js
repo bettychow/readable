@@ -17,8 +17,6 @@ class Main extends Component {
 
   state = {
     createPostModalOpen: false,
-    byTime: "",
-    byScore: ""
   }
 
   openCreatePostModal = () => {
@@ -34,16 +32,10 @@ class Main extends Component {
   }
 
   handleChangeTime = (event) => {
-    this.setState( {
-      byTime: event.target.value
-    })
     this.props.onSortPostsByTime(event.target.value)
   }
 
   handleChangeScore = event => {
-    this.setState({
-      byScore: event.target.value
-    })
     this.props.onSortPostsByScore(event.target.value)
   }
 
@@ -51,8 +43,6 @@ class Main extends Component {
       let time = parseInt(timestamp);
       let d = new Date(time); 
       return `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}    ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
-
-
     };
 
   renderPostList = () => {
@@ -62,11 +52,11 @@ class Main extends Component {
     })
     return filteredPosts.map(post => {
       return (
-        <li key={post.id}>
-          <Link to={ `/post/${post.id}` }>{post.title}</Link>
-          <p>{post.author}</p>
-          <p>{post.voteScore}</p> 
-          <p>{this.time(post.timestamp)}</p>
+        <li className="post-list" key={post.id}>
+          <Link to={ `/post/${post.id}` }><h4>{post.title}</h4></Link>
+          <p>By: {post.author}</p>
+          <p>Likes: {post.voteScore}</p> 
+          <p>time: {this.time(post.timestamp)}</p>
         </li>
       )
     })
@@ -75,7 +65,7 @@ class Main extends Component {
   renderCategoryList = () => {
     return this.props.categories.map(category => {
       return (
-        <li key={category.name}>
+        <li className="categoryList" key={category.name}>
           <Link to ={`./${category.name}`} >{category.name}</Link>
         </li>
       )
@@ -87,12 +77,16 @@ class Main extends Component {
     const { createPostModalOpen } = this.state
     console.log(this.state)
     return (
-      <div>
-        <div>
+      <div className="container">
+        <div className="category-group">
+          <h1>My Blog</h1>
+          <h3>Get posts By Category</h3>
           <ul>
             { this.renderCategoryList() }
           </ul>   
         </div>
+        <h2>All Posts</h2>
+        <div className="buttons">
         <form>
         <label>
           Sort Post By Time:
@@ -116,7 +110,8 @@ class Main extends Component {
         <button onClick={() => this.openCreatePostModal()}>
           Create New Post       
         </button>
-        <div>
+        </div>
+        <div className="post-list-group">
           <ul>
             {this.renderPostList()}
           </ul>
@@ -131,7 +126,7 @@ class Main extends Component {
          <div>
            <CreateNewPost />
            <button onClick={() => this.closeCreatePostModal()}>Close</button>
-           </div>
+        </div>
         </Modal>
       </div>
     );

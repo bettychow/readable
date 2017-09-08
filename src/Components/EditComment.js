@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { Field, reduxForm } from 'redux-form'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { fetchCommentById } from '../Actions'
+import { fetchCommentById, updateComment, fetchComments } from '../Actions'
 // import { updateComment } from '../Actions'
 const randomID = require("random-id")
-
+ 
 class EditComment extends Component {
+
 
   renderField = (field) => {
     const { meta: { touched, error } }  = field
@@ -31,16 +32,24 @@ class EditComment extends Component {
     const id = values.id
     let newValues = {}
     newValues.body = values.body
-  //  this.props.updatePost(newValues, id, this.props.history.push(`/post/${id}`) )
+    this.props.updateComment(newValues, id)
+    this.props.fetchComments(values.parentId)
   }
 
+  time = timestamp => {
+    let time = parseInt(timestamp);
+    let d = new Date(time); 
+    return `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}    ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+  };
+
   render() {
-
-
-    console.log('vvvv', this.props.initialValues)
+  
     if(!this.props.initialValues) {
       return <div></div>
-    }
+    } 
+
+
+   
 
     const { handleSubmit, categories, id } = this.props
 
@@ -88,8 +97,9 @@ const mapStateToProps = state => {
 
 EditComment = reduxForm({
   validate,
-  form: 'CommentEditForm'
+  form: 'CommentEditForm',
+  enableReinitialize : true
 })(EditComment)
 
 
-export default connect(mapStateToProps, { fetchCommentById })(EditComment)
+export default connect(mapStateToProps, { fetchCommentById, updateComment, fetchComments })(EditComment)

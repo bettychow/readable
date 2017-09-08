@@ -13,16 +13,25 @@ export const CREATE_NEW_POST = "CREATE_NEW_POST"
 export const DELETE_POST_BY_ID = "DELETE_POST_BY_ID"
 export const DELETE_COMMENT_BY_ID ="DELETE_COMMENT_BY_ID"
 export const UPDATE_POST = "UPATE_POST"
+export const UPDATE_COMMENT = "UPATE_COMMENT"
 export const UPVOTE ="UPVOTE"
 export const CREATE_COMMENT = "CREATE_COMMENT"
 export const FETCH_ALL_COMMENTS = "FETCH_ALL_COMMENTS"
 export const FETCH_BY_CAT = "FETCH_BY_CAT"
 export const SORT_BY_TIME_CAT = "SORT_BY_TIME_CAT"
 export const SORT_BY_SCORE_CAT = "SORT_BY_SCORE_CAT"
+export const SORT_COM_BY_TIME_LATEST = "SORT_COM_BY_TIME_LATEST"
+export const SORT_COM_BY_TIME_OLDEST = "SORT_COM_BY_TIME_OLDEST"
+export const SORT_COM_BY_SCORE_HIGHEST = "SORT_COM_BY_SCORE_HIGHEST"
+export const SORT_COM_BY_SCORE_LOWEST = "SORT_COM_BY_SCORE_LOWEST"
+export const SORT_POST_BY_TIME_LATEST_CAT = "SORT_POST_BY_TIME_LATEST_CAT"
+export const SORT_POST_BY_TIME_OLDEST_CAT = "SORT_POST_BY_TIME_OLDEST_CAT"
+export const SORT_POST_BY_SCORE_HIGHEST_CAT = "SORT_POST_BY_SCORE_HIGHEST_CAT"
+export const SORT_POST_BY_SCORE_LOWEST_CAT = "SORT_POST_BY_SCORE_LOWEST_CAT"
 
-export const createPost = (values, callback) => {
+export const createPost = (values) => {
   ReadableAPI.create(values)
-  .then(() => callback())
+  
   return {
     type: CREATE_NEW_POST,
     payload: values
@@ -119,9 +128,9 @@ export const deleteByCommentId = (id) => {
   }
 }
 
-export const updatePost = (values, id, callback) => {
+export const updatePost = (values, id) => {
   ReadableAPI.editPost(id, values)
-  // .then(() => callback())
+   //.then(() => callback())
   return {
     type: UPDATE_POST,
     payload: values
@@ -175,14 +184,13 @@ export const fetchCommentById = id => dispatch => {
    .catch(err => console.log(err));
 };
 
-/*export const updateComment = (values, id, callback) => {
-  ReadableAPI.editPost(id, values)
-  // .then(() => callback())
+export const updateComment = (values, id) => {
+  ReadableAPI.editComment(id, values)
   return {
     type: UPDATE_COMMENT,
     payload: values
   }
-} */
+} 
 
 export const fetchByCategory = category => dispatch => {
   ReadableAPI.getPostsByCat(category)
@@ -196,16 +204,51 @@ export const fetchByCategory = category => dispatch => {
    .catch(err => console.log(err));
 };
 
-export const sortByTimeCat = () => {
+export const sortByTimeCat = (value) => {
 
+  if(value === 'latestFirst') {
+    return {
+      type: SORT_POST_BY_TIME_LATEST_CAT,
+    }
+  }
   return {
-    type: SORT_BY_TIME_CAT
+    type: SORT_POST_BY_TIME_OLDEST_CAT
   }
 }
 
-export const sortByScoreCat = () => {
+export const sortByScoreCat = (value) => {
   
+  if(value === 'highestFirst') {
     return {
-      type: SORT_BY_SCORE_CAT
+      type: SORT_POST_BY_SCORE_HIGHEST_CAT,
     }
   }
+  return {
+    type: SORT_POST_BY_SCORE_LOWEST_CAT
+  }
+  }
+
+  export const sortCommentsByTime = (value) => {
+    if(value === 'latestFirst') {
+    return {
+      type: SORT_COM_BY_TIME_LATEST,
+    }
+  }
+  return {
+    type: SORT_COM_BY_TIME_OLDEST
+  }
+  };
+
+
+  export const sortCommentsByScore = (value) => {
+    if(value === 'highestFirst') {
+    return {
+      type: SORT_COM_BY_SCORE_HIGHEST,
+    }
+  }
+  return {
+    type: SORT_COM_BY_SCORE_LOWEST
+  }
+  };
+
+  

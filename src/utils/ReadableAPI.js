@@ -100,6 +100,18 @@ export const editPost = (id, post) =>
     .then(res => res.json())
     .then(data => data);
 
+  export const editComment = (id, comment) =>
+  fetch(`${api}/comments/${id}`, {
+    method: "PUT",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(comment)
+  })
+
+
+
   export const getPostsByCat = category => 
   fetch(`${api}/${category}/posts`, { headers })
   .then(res => {

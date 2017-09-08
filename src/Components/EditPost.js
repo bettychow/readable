@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Field, reduxForm } from 'redux-form'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { updatePost } from '../Actions'
+import { updatePost, fetchByPostId } from '../Actions'
 const randomID = require("random-id")
 
 class EditPost extends Component {
@@ -12,15 +12,17 @@ class EditPost extends Component {
     const className = `form-group ${ touched && error ? 'has-danger' : '' }`
   
     return (
-      <div className={className}>
-        <label>{field.label}</label>
-        <input 
-          className="form-control"
-          type="text"
-          {...field.input}
-        />
-        <div className="text-help">
-          {touched ? error : ''}
+      <div className="edit-post">
+        <div className={className}>
+          <label>{field.label}</label>
+          <input 
+            className="form-control"
+            type="text"
+            {...field.input}
+          />
+          <div className="text-help">
+            {touched ? error : ''}
+          </div>
         </div>
       </div>
     )
@@ -31,7 +33,8 @@ class EditPost extends Component {
     let newValues = {}
     newValues.body = values.body
     newValues.title = values.title
-    this.props.updatePost(newValues, id, this.props.history.push(`/post/${id}`) )
+    this.props.updatePost(newValues, id)
+    this.props.fetchByPostId(id)
   }
 
   render() {
@@ -93,4 +96,4 @@ EditPost = reduxForm({
 })(EditPost)
 
 
-export default connect(mapStateToProps, { updatePost })(EditPost)
+export default connect(mapStateToProps, { updatePost, fetchByPostId })(EditPost)
