@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom'
 import { connect, bindActionCreators } from "react-redux";
-import { fetchByPostId, deleteByPostId, deleteByCommentId, vote, voteComment, fetchComments, fetchCommentById, sortCommentsByScore, sortCommentsByTime } from "../Actions";
+import { fetchByPostId, deleteByPostId, vote, voteComment, fetchComments } from "../Actions";
 import { Field, reduxForm } from 'redux-form'
 import CreateNewComment from './CreateNewComment'
 import EditPost from './EditPost'
 import EditComment from './EditComment'
-// import Comments from './Comments'
+import Comments from './Comments'
 import Modal from 'react-modal'
 const randomID = require("random-id")
 
@@ -19,10 +19,6 @@ class PostDetails extends Component {
 
   state = {
     editPostModalOpen: false,
-    editCommentModalOpen: false,
-    commentModalOpen: false,
-    byTime: "",
-    byScore: ""
   }
 
   openEditPostModal = () => {
@@ -36,30 +32,6 @@ class PostDetails extends Component {
       editPostModalOpen: false,
     }))
   }
-  openEditCommentModal = (id) => {
-    this.setState(() => ({
-      editCommentModalOpen: true,
-    }))
-    this.props.fetchCommentById(id)
-  }
-
-  closeEditCommentModal = () => {
-    this.setState(() => ({
-      editCommentModalOpen: false,
-    }))
-  }
-  openCommentModal = () => {
-    this.setState(() => ({
-      commentModalOpen: true,
-    }))
-  }
-
-  closeCommentModal = () => {
-    this.setState(() => ({
-      commentModalOpen: false,
-    }))
-  }
-
 
   time = timestamp => {
       let time = parseInt(timestamp);
@@ -70,7 +42,6 @@ class PostDetails extends Component {
   onDeletePost = id => {
     this.props.deleteByPostId(id,  
         this.props.history.push('/')
-    
     )
   }
 
@@ -84,42 +55,6 @@ class PostDetails extends Component {
     this.props.vote(id, option)
   }
 
-  onDeleteComment = id => {
-    this.props.deleteByCommentId(id)
-    this.props.fetchComments(this.props.match.params.post_id)
-  }
-
-  handleChangeTime = (event) => {
-    this.setState( {
-      byTime: event.target.value
-    })
-    this.props.onSortCommentsByTime(event.target.value)
-  }
-
-  handleChangeScore = event => {
-    this.setState({
-      byScore: event.target.value
-    })
-    this.props.onSortCommentsByScore(event.target.value)
-  }
-  
-  renderCommentList = () => {   
-        return this.props.comments.map(comment => {
-          return (
-            <div>
-              <li className="post-list" key={comment.id}>
-                <p className="post-content">{comment.body}</p>
-                <p>{comment.author}</p>
-                <p>{comment.voteScore}</p> 
-                <p>{this.time(comment.timestamp)}</p>
-              </li>
-              <button onClick={() => this.onDeleteComment(comment.id)}>Delete</button>
-              <button onClick={() => this.openEditCommentModal(comment.id)}>Edit</button>
-            </div>
-          )
-        })
-      }
-
   render() {
  
     if(!this.props.post) {
@@ -129,8 +64,7 @@ class PostDetails extends Component {
       return <div></div>
     }
    
-    const { handleSubmit, categories } = this.props
-    const { editPostModalOpen, commentModalOpen, editCommentModalOpen } = this.state
+    const { editPostModalOpen } = this.state
 
     return (
       <div>
@@ -166,7 +100,7 @@ class PostDetails extends Component {
           <button onClick={() => this.onDownVote(this.props.post.id)}>Thumbs Down</button>
           <button onClick={() => this.onDeletePost(this.props.post.id)}>Delete</button>
           <button onClick={() => this.openEditPostModal()}>Edit</button>
-          <button onClick={() => this.openCommentModal()}>Reply</button>
+          
         </div>
         <Modal
           className='modal'
@@ -180,56 +114,7 @@ class PostDetails extends Component {
             <button onClick={() => this.closeEditPostModal()}>Close</button>
           </div>
         </Modal>
-        <Modal
-          className='modal'
-          overlayClassName='overlay'
-          isOpen={commentModalOpen}
-          onRequestClose={this.closeCommentModal}
-          contentLabel='Modal'
-        >
-         <div>
-           <CreateNewComment />
-           <button onClick={() => this.closeCommentModal()}>Close</button>
-           </div>
-        </Modal>
-    
-        <div className="comment-list-group">
-          <h2 className="comment-list-title">Comments</h2>
-          <form>
-            <label>
-              Sort Comment By Time:
-              <select value={this.state.value} onChange={this.handleChangeTime}>
-                <option />
-                <option value="latestFirst">Latest First</option>
-                <option value="oldestFirst">Oldest First</option>
-              </select>
-            </label>
-          </form>
-          <form>
-            <label>
-              Sort Comment By Vote Score:
-              <select value={this.state.value} onChange={this.handleChangeScore}>
-                <option />
-                <option value="lowestFirst">Lowest First</option>
-                <option value="highestFirst">Highest First</option>
-              </select>
-            </label>
-          </form>
-          {this.renderCommentList()}
-        </div>
-
-        <Modal
-          className='modal'
-          overlayClassName='overlay'
-          isOpen={editCommentModalOpen}
-          onRequestClose={this.closeEditCommentModal}
-          contentLabel='Modal'
-        >
-         <div>
-           <EditComment />
-           <button onClick={() => this.closeEditCommentModal()}>Close</button>
-           </div>
-        </Modal>
+        < Comments />
       </div>
     );
   }
@@ -247,12 +132,8 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchByPostId: id => dispatch(fetchByPostId(id)),
     deleteByPostId: id => dispatch(deleteByPostId(id)),
-    deleteByCommentId: id => dispatch(deleteByCommentId(id)),
     vote: (id, option) => dispatch(vote(id, option)),
     fetchComments: id => dispatch(fetchComments(id)),
-    fetchCommentById: id => dispatch(fetchCommentById(id)),
-    onSortCommentsByTime: (e) => dispatch(sortCommentsByTime(e)),
-    onSortCommentsByScore: (e) => dispatch(sortCommentsByScore(e)),
   };
 };
 

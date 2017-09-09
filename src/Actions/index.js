@@ -28,6 +28,7 @@ export const SORT_POST_BY_TIME_LATEST_CAT = "SORT_POST_BY_TIME_LATEST_CAT"
 export const SORT_POST_BY_TIME_OLDEST_CAT = "SORT_POST_BY_TIME_OLDEST_CAT"
 export const SORT_POST_BY_SCORE_HIGHEST_CAT = "SORT_POST_BY_SCORE_HIGHEST_CAT"
 export const SORT_POST_BY_SCORE_LOWEST_CAT = "SORT_POST_BY_SCORE_LOWEST_CAT"
+export const VOTE_COMMENT = "VOTE_COMMENT"
 
 export const createPost = (values) => {
   ReadableAPI.create(values)
@@ -40,7 +41,6 @@ export const createPost = (values) => {
 }
 
 export const fetchByPostId = id => dispatch => {
-  console.log('id', id)
   ReadableAPI.getPostById(id)
   .then(post => {
     
@@ -164,7 +164,6 @@ export const createComment = values => dispatch => {
 export const fetchComments = id => dispatch => {
   ReadableAPI.getAllComments(id)
   .then(comments => {
-    console.log('wwwww', comments)
      dispatch({ 
        type: FETCH_ALL_COMMENTS, 
        payload: comments
@@ -195,7 +194,6 @@ export const updateComment = (values, id) => {
 export const fetchByCategory = category => dispatch => {
   ReadableAPI.getPostsByCat(category)
   .then(posts => {
-    console.log('posts by cat', posts)
      dispatch({ 
        type: FETCH_BY_CAT, 
        payload: posts
@@ -250,5 +248,17 @@ export const sortByScoreCat = (value) => {
     type: SORT_COM_BY_SCORE_LOWEST
   }
   };
+
+  export const voteComment = (id, option) => dispatch => {
+      ReadableAPI.voteComment(id, option)
+      .then(comment => {
+        dispatch({ 
+          type: VOTE_COMMENT, 
+          payload: comment
+        });
+      })
+      .catch(err => console.log(err));
+     }
+
 
   

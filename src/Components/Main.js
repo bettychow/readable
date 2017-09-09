@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetchPosts, sortByTime, sortByScore, fetchCats, createNewPost, fetchByPostId } from "../Actions";
-import * as ReadableAPI from "../utils/ReadableAPI";
 import { bindActionCreators } from 'redux'
 import Modal from 'react-modal'
 import CreateNewPost from './CreateNewPost'
@@ -10,7 +9,6 @@ import CreateNewPost from './CreateNewPost'
 
 class Main extends Component {
   componentDidMount() {
-    console.log('mmm', this)
     this.props.fetchPosts()
     this.props.fetchCategories()
   }
@@ -71,11 +69,9 @@ class Main extends Component {
       )
     })
   }
-
   
   render() {
     const { createPostModalOpen } = this.state
-    console.log(this.state)
     return (
       <div className="container">
         <div className="category-group">
@@ -99,7 +95,7 @@ class Main extends Component {
       </form>
       <form>
         <label>
-          Sort Post By Vote Score:
+          Sort Post By Likes:
           <select value={this.state.value} onChange={this.handleChangeScore}>
             <option />
             <option value="lowestFirst">Lowest First</option>
