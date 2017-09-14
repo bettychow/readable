@@ -28,6 +28,7 @@ export const SORT_POST_BY_TIME_LATEST_CAT = "SORT_POST_BY_TIME_LATEST_CAT"
 export const SORT_POST_BY_TIME_OLDEST_CAT = "SORT_POST_BY_TIME_OLDEST_CAT"
 export const SORT_POST_BY_SCORE_HIGHEST_CAT = "SORT_POST_BY_SCORE_HIGHEST_CAT"
 export const SORT_POST_BY_SCORE_LOWEST_CAT = "SORT_POST_BY_SCORE_LOWEST_CAT"
+export const VOTE_COMMENT = "VOTE_COMMENT"
 
 export const createPost = (values) => {
   ReadableAPI.create(values)
@@ -248,5 +249,17 @@ export const sortByScoreCat = (value) => {
     type: SORT_COM_BY_SCORE_LOWEST
   }
   };
+
+  export const voteComment = (id, option) => dispatch => {
+      ReadableAPI.voteComment(id, option)
+      .then(comment => {
+        dispatch({ 
+          type: VOTE_COMMENT, 
+          payload: comment
+        });
+      })
+      .catch(err => console.log(err));
+     }
+
 
   

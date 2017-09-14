@@ -41,7 +41,7 @@ class Comments extends Component {
 
   onDeleteComment = id => {
     this.props.deleteByCommentId(id)
-    //this.props.fetchComments(this.props.comment.parentId)
+    this.props.fetchComments(this.props.comments[0].parentId)
   }
 
   handleChangeTime = (event) => {
@@ -58,18 +58,30 @@ class Comments extends Component {
     this.props.onSortCommentsByScore(event.target.value)
   }
 
+  onUpVote = (id) => {
+    const option = {option: "upVote"}
+    this.props.voteComment(id, option)
+    this.props.fetchComments(this.props.comments[0].parentId)
+  }
+
+  onDownVote = (id) => {
+    const option = {option: "downVote"}
+    this.props.voteComment(id, option)
+    this.props.fetchComments(this.props.comments[0].parentId)
+  }
+
   renderCommentList = () => {   
     return this.props.comments.map(comment => {
       return (
         <div>
           <li className="post-list" key={comment.id}>
             <p className="post-content">{comment.body}</p>
-            <p>{comment.author}</p>
-            <p>{comment.voteScore}</p> 
-            <p>{this.time(comment.timestamp)}</p>
+            <p>by: {comment.author}</p>
+            <p>likes: {comment.voteScore}</p> 
+            <p>time: {this.time(comment.timestamp)}</p>
           </li>
-          <button onClick={() => this.onUpVote(this.props.comment.id)}>Thumbs Up</button>
-          <button onClick={() => this.onDownVote(this.props.comment.id)}>Thumbs Down</button>
+          <button onClick={() => this.onUpVote(comment.id)}>Thumbs Up</button>
+          <button onClick={() => this.onDownVote(comment.id)}>Thumbs Down</button>
           <button onClick={() => this.onDeleteComment(comment.id)}>Delete</button>
           <button onClick={() => this.openEditCommentModal(comment.id)}>Edit</button>
         </div>
@@ -118,7 +130,7 @@ class Comments extends Component {
     </form>
     <form>
       <label>
-        Sort Comment By Vote Score:
+        Sort Comment By Likes:
         <select value={this.state.value} onChange={this.handleChangeScore}>
           <option />
           <option value="lowestFirst">Lowest First</option>
@@ -126,7 +138,7 @@ class Comments extends Component {
         </select>
       </label>
     </form>
-    <button onClick={() => this.openCommentModal()}>Reply</button>
+    <button onClick={() => this.openCommentModal()}>Create Comment</button>
     {this.renderCommentList()}
   </div>
 
@@ -158,7 +170,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
   return {
     deleteByCommentId: id => dispatch(deleteByCommentId(id)),
-    //vote: (id, option) => dispatch(vote(id, option)),
+    voteComment: (id, option) => dispatch(voteComment(id, option)),
     fetchComments: id => dispatch(fetchComments(id)),
     fetchCommentById: id => dispatch(fetchCommentById(id)),
     onSortCommentsByTime: (e) => dispatch(sortCommentsByTime(e)),

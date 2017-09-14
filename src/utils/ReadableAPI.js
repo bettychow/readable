@@ -109,11 +109,21 @@ export const editPost = (id, post) =>
     body: JSON.stringify(comment)
   })
 
-
-
   export const getPostsByCat = category => 
   fetch(`${api}/${category}/posts`, { headers })
   .then(res => {
     const data = res.json();  
     return data;
   })
+
+  export const voteComment = (id, option) => 
+    fetch(`${api}/comments/${id}`, {
+      method: "POST",
+      headers: {
+        ...headers,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(option)
+    })
+    .then(res => res.json())
+  

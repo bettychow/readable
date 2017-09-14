@@ -1,4 +1,13 @@
-import { CREATE_COMMENT, UPDATE_COMMENT, FETCH_ALL_COMMENTS, FETCH_COMMENT_BY_ID, SORT_COM_BY_TIME_LATEST, SORT_COM_BY_TIME_OLDEST, SORT_COM_BY_SCORE_HIGHEST, SORT_COM_BY_SCORE_LOWEST } from "../Actions";
+import { CREATE_COMMENT, 
+         UPDATE_COMMENT, 
+         FETCH_ALL_COMMENTS, 
+         FETCH_COMMENT_BY_ID, 
+         SORT_COM_BY_TIME_LATEST, 
+         SORT_COM_BY_TIME_OLDEST, 
+         SORT_COM_BY_SCORE_HIGHEST, 
+         SORT_COM_BY_SCORE_LOWEST,
+         VOTE_COMMENT
+        } from "../Actions";
 
 const initialState = {
   comments: [],
@@ -31,14 +40,12 @@ const commentReducer = (state = initialState, action) => {
       };
     }
     break
-
     case CREATE_COMMENT: {
       const newState = Object.assign( {}, state)
       newState.comments.push(action.payload)
       return newState
     }
     break
-
     case UPDATE_COMMENT: {
       return {
         ...state,
@@ -46,7 +53,13 @@ const commentReducer = (state = initialState, action) => {
       };
     }
     break
-
+    case VOTE_COMMENT: {
+      return {
+        ...state,
+        selectedComment: action.payload
+      };
+    }
+    break
   case SORT_COM_BY_TIME_LATEST: {
     const newCommentsState = Object.assign( [], state.comments)
     newCommentsState.sort((a,b) => {
@@ -63,7 +76,6 @@ const commentReducer = (state = initialState, action) => {
       comments: newCommentsState
     };
   }
-
   case SORT_COM_BY_TIME_OLDEST: {
     const newCommentsState = Object.assign( [], state.comments)
     newCommentsState.sort((a,b) => {
@@ -80,7 +92,6 @@ const commentReducer = (state = initialState, action) => {
       comments: newCommentsState
     };
   }
-
   case SORT_COM_BY_SCORE_HIGHEST: {
     const newCommentsState = Object.assign( [], state.comments)
     newCommentsState.sort((a,b) => {
@@ -97,7 +108,6 @@ const commentReducer = (state = initialState, action) => {
       comments: newCommentsState
     };
   }
-
   case SORT_COM_BY_SCORE_LOWEST: {
     const newCommentsState = Object.assign( [], state.comments)
     newCommentsState.sort((a,b) => {
@@ -114,7 +124,6 @@ const commentReducer = (state = initialState, action) => {
       comments: newCommentsState
     };
   }
-   
     default:
       return state;
   }

@@ -67,7 +67,7 @@ class Category extends Component {
         </form>
         <form>
           <label>
-            Sort Post By Vote Score:
+            Sort Post By Likes:
             <select value={this.state.value} onChange={this.handleChangeScore}>
               <option />
               <option value="lowestFirst">Lowest First</option>
