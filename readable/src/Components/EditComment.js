@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Field, reduxForm } from 'redux-form'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { updateComment, fetchComments } from '../Actions'
+import { fetchCommentById, updateComment, fetchComments } from '../Actions'
 // import { updateComment } from '../Actions'
 const randomID = require("random-id")
  
@@ -43,7 +43,14 @@ class EditComment extends Component {
   };
 
   render() {
+  
+    if(!this.props.initialValues) {
+      return <div></div>
+    } 
+
+
    
+
     const { handleSubmit, categories, id } = this.props
 
     return (
@@ -55,10 +62,11 @@ class EditComment extends Component {
             name="body"
             component={this.renderField}
           />
-          <span>Author: </span><span>{this.props.initialValues.author}</span>
-          <span>Time: </span><span>{this.time(this.props.initialValues.timestamp)}</span>
+          <span>Author: </span><span>{this.props.initialValues.author}  </span>
+          <span>Time: </span><span>{this.props.initialValues.timestamp}</span>
           <div>
-           <button type="submit">Submit</button>      
+          <button type="submit">Submit</button> 
+        
           </div>
         </form>
       </div> 
@@ -74,7 +82,7 @@ const validate = (values) => {
   if(!values.category) {
     errors.category = "Enter a category"
   }
-  if(!values.body) {
+  if(!values.content) {
     errors.content = "Enter some content"
   }
   return errors
@@ -94,4 +102,4 @@ EditComment = reduxForm({
 })(EditComment)
 
 
-export default connect(mapStateToProps, { updateComment, fetchComments })(EditComment)
+export default connect(mapStateToProps, { fetchCommentById, updateComment, fetchComments })(EditComment)

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom'
 import { connect, bindActionCreators } from "react-redux";
-import { fetchByPostId, deleteByPostId, deleteByCommentId, vote, voteComment, fetchComments, fetchCommentById, sortCommentsByScore, sortCommentsByTime } from "../Actions";
+import { fetchByPostId, deleteByPostId, vote, voteComment, fetchComments } from "../Actions";
 import { Field, reduxForm } from 'redux-form'
 import CreateNewComment from './CreateNewComment'
 import EditPost from './EditPost'
@@ -19,10 +19,6 @@ class PostDetails extends Component {
 
   state = {
     editPostModalOpen: false,
-    editCommentModalOpen: false,
-    commentModalOpen: false,
-    byTime: "",
-    byScore: ""
   }
 
   openEditPostModal = () => {
@@ -45,7 +41,7 @@ class PostDetails extends Component {
 
   onDeletePost = id => {
     this.props.deleteByPostId(id,  
-        this.props.history.push('/')  
+        this.props.history.push('/')
     )
   }
 
@@ -68,8 +64,7 @@ class PostDetails extends Component {
       return <div></div>
     }
    
-    const { handleSubmit, categories } = this.props
-    const { editPostModalOpen, commentModalOpen, editCommentModalOpen } = this.state
+    const { editPostModalOpen } = this.state
 
     return (
       <div>
@@ -105,6 +100,7 @@ class PostDetails extends Component {
           <button onClick={() => this.onDownVote(this.props.post.id)}>Thumbs Down</button>
           <button onClick={() => this.onDeletePost(this.props.post.id)}>Delete</button>
           <button onClick={() => this.openEditPostModal()}>Edit</button>
+          
         </div>
         <Modal
           className='modal'
@@ -118,7 +114,7 @@ class PostDetails extends Component {
             <button onClick={() => this.closeEditPostModal()}>Close</button>
           </div>
         </Modal>
-        <Comments />    
+        < Comments />
       </div>
     );
   }

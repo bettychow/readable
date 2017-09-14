@@ -56,10 +56,11 @@ class EditPost extends Component {
             name="body"
             component={this.renderField}
           />
-          <span>Author: </span><span>{this.props.initialValues.author}</span>
+          <span>Author: </span><span>{this.props.initialValues.author}  </span>
           <span>Time: </span><span>{this.props.initialValues.timestamp}</span>
           <div>
-            <button type="submit">Submit</button>
+          <button type="submit">Submit</button>
+        
           </div>
         </form>
       </div> 
